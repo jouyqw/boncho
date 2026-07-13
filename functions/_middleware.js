@@ -6,6 +6,14 @@ export async function onRequest(context) {
     return next();
   }
 
+  if (isObviousScanner(request, url)) {
+    return new Response("Blocked", { status: 403 });
+  }
+
+  if (!shouldInspectRequest(request, url)) {
+    return next();
+  }
+
   const ip = getClientIp(request);
   if (!ip || !env.CLICK_GUARD_KV) {
     return next();
@@ -13,26 +21,14 @@ export async function onRequest(context) {
 
   const blocked = await env.CLICK_GUARD_KV.get(`block:${ip}`, "json");
   if (blocked) {
-    return new Response(renderBlockedPage(blocked), {
-      status: 403,
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-store"
-      }
-    });
+    return renderBlockedResponse(blocked);
   }
 
-  if (shouldTrackRequest(request, url)) {
+  if (shouldTrackAdVisit(request, url)) {
     const event = await buildVisitEvent(request, url);
     const decision = await judgeAndStoreVisit(env.CLICK_GUARD_KV, event);
     if (decision.blocked) {
-      return new Response(renderBlockedPage({ reason: decision.reasons.join(" / ") }), {
-        status: 403,
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "no-store"
-        }
-      });
+      return renderBlockedResponse({ reason: decision.reasons.join(" / ") });
     }
   }
 
@@ -44,17 +40,31 @@ const LIMITS = {
   hourVisits: 18,
   dayVisits: 45,
   minSecondsBetweenVisits: 4,
-  blockTtlSeconds: 60 * 60 * 24 * 30
+  blockTtlSeconds: 60 * 60 * 24 * 30,
+  stateTtlSeconds: 60 * 60 * 24 * 8
 };
 
-function shouldTrackRequest(request, url) {
+function shouldInspectRequest(request, url) {
   if (request.method !== "GET") return false;
   const accept = request.headers.get("Accept") || "";
   const path = url.pathname.toLowerCase();
-  if (path.startsWith("/assets/") || path.endsWith(".css") || path.endsWith(".js")) return false;
-  if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")) return false;
-  if (path.endsWith(".mp4") || path.endsWith(".ico") || path.endsWith(".svg") || path.endsWith(".webp")) return false;
+  if (path.startsWith("/assets/")) return false;
+  if (/\.(css|js|png|jpg|jpeg|gif|webp|svg|ico|mp4|txt|xml|json)$/i.test(path)) return false;
   return accept.includes("text/html") || path === "/" || !path.includes(".");
+}
+
+function shouldTrackAdVisit(request, url) {
+  const referrer = request.headers.get("Referer") || "";
+  const source = url.searchParams.get("utm_source") || "";
+  return /naver|google/i.test(`${source} ${referrer}`);
+}
+
+function isObviousScanner(request, url) {
+  const ua = request.headers.get("User-Agent") || "";
+  const path = url.pathname.toLowerCase();
+  if (/wp-admin|wp-login|phpmyadmin|\.env|xmlrpc\.php/.test(path)) return true;
+  if (/curl|l9scan|leakix|nikto|sqlmap|masscan|zgrab/i.test(ua)) return true;
+  return false;
 }
 
 async function buildVisitEvent(request, url) {
@@ -82,35 +92,47 @@ async function buildVisitEvent(request, url) {
 }
 
 async function judgeAndStoreVisit(kv, event) {
-  const now = event.ts;
-  const minuteBucket = Math.floor(now / 60000);
-  const hourBucket = Math.floor(now / 3600000);
+  const minuteBucket = Math.floor(event.ts / 60000);
+  const hourBucket = Math.floor(event.ts / 3600000);
   const day = event.at.slice(0, 10).replaceAll("-", "");
+  const stateKey = `state:ad:${event.ip}:${day}`;
+  const previous = (await kv.get(stateKey, "json")) || {};
 
-  const minuteCount = await increment(kv, `count:visit:minute:${event.ip}:${minuteBucket}`, 3600);
-  const hourCount = await increment(kv, `count:visit:hour:${event.ip}:${hourBucket}`, 60 * 60 * 26);
-  const dayCount = await increment(kv, `count:visit:day:${event.ip}:${day}`, 60 * 60 * 24 * 8);
-
-  const lastKey = `last:visit:${event.ip}`;
-  const last = await kv.get(lastKey, "json");
-  await kv.put(lastKey, JSON.stringify(event), { expirationTtl: 60 * 60 * 24 * 8 });
+  const minuteCount = previous.minuteBucket === minuteBucket ? Number(previous.minuteCount || 0) + 1 : 1;
+  const hourCount = previous.hourBucket === hourBucket ? Number(previous.hourCount || 0) + 1 : 1;
+  const dayCount = Number(previous.dayCount || 0) + 1;
 
   const reasons = [];
   if (minuteCount >= LIMITS.minuteVisits) reasons.push(`1분 ${minuteCount}회 접속`);
   if (hourCount >= LIMITS.hourVisits) reasons.push(`1시간 ${hourCount}회 접속`);
   if (dayCount >= LIMITS.dayVisits) reasons.push(`하루 ${dayCount}회 접속`);
-  if (last && now - last.ts < LIMITS.minSecondsBetweenVisits * 1000) {
+  if (previous.lastTs && event.ts - previous.lastTs < LIMITS.minSecondsBetweenVisits * 1000) {
     reasons.push(`${LIMITS.minSecondsBetweenVisits}초 이내 반복 접속`);
   }
-  if (last && last.uaHash === event.uaHash && last.referrer === event.referrer && minuteCount >= 3) {
+  if (previous.lastUaHash === event.uaHash && previous.lastReferrer === event.referrer && minuteCount >= 3) {
     reasons.push("같은 기기/유입경로 반복 접속");
   }
 
-  await kv.put(
-    `visit:${event.at}:${event.ip}:${event.uaHash.slice(0, 10)}`,
-    JSON.stringify({ ...event, minuteCount, hourCount, dayCount, reasons }),
-    { expirationTtl: 60 * 60 * 24 * 14 }
-  );
+  const state = {
+    ip: event.ip,
+    source: event.source,
+    referrer: event.referrer,
+    ua: event.ua,
+    country: event.country,
+    asn: event.asn,
+    minuteBucket,
+    minuteCount,
+    hourBucket,
+    hourCount,
+    dayCount,
+    lastTs: event.ts,
+    lastAt: event.at,
+    lastUaHash: event.uaHash,
+    lastReferrer: event.referrer,
+    reasons
+  };
+
+  await kv.put(stateKey, JSON.stringify(state), { expirationTtl: LIMITS.stateTtlSeconds });
 
   const shouldBlock =
     reasons.length >= 2 ||
@@ -144,13 +166,6 @@ async function judgeAndStoreVisit(kv, event) {
   return { blocked: false, reasons };
 }
 
-async function increment(kv, key, ttl) {
-  const current = Number((await kv.get(key)) || "0");
-  const next = current + 1;
-  await kv.put(key, String(next), { expirationTtl: ttl });
-  return next;
-}
-
 function getClientIp(request) {
   return (
     request.headers.get("CF-Connecting-IP") ||
@@ -169,6 +184,16 @@ async function sha256(value) {
   const data = new TextEncoder().encode(value);
   const hash = await crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function renderBlockedResponse(blocked) {
+  return new Response(renderBlockedPage(blocked), {
+    status: 403,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store"
+    }
+  });
 }
 
 function renderBlockedPage(blocked) {
