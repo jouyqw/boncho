@@ -63,6 +63,20 @@ CSV:
 https://bonchojw.com/admin/blocked?token=ADMIN_TOKEN&format=csv
 ```
 
+## 의심 광고 유입 IP 확인
+
+차단까지는 안 됐지만 네이버/구글 광고 유입으로 기록된 IP입니다.
+
+```text
+https://bonchojw.com/admin/suspects?token=ADMIN_TOKEN
+```
+
+CSV:
+
+```text
+https://bonchojw.com/admin/suspects?token=ADMIN_TOKEN&format=csv
+```
+
 ## 차단 해제
 
 ```text

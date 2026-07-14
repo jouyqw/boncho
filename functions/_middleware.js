@@ -56,7 +56,8 @@ function shouldInspectRequest(request, url) {
 function shouldTrackAdVisit(request, url) {
   const referrer = request.headers.get("Referer") || "";
   const source = url.searchParams.get("utm_source") || "";
-  return /naver|google/i.test(`${source} ${referrer}`);
+  const query = url.searchParams.toString();
+  return /naver|google/i.test(`${source} ${referrer}`) || /(^|&)(gclid|gbraid|wbraid|gad_source|n_media|n_query|n_rank|n_ad_group|n_ad|n_keyword|NaPm)=/i.test(query);
 }
 
 function isObviousScanner(request, url) {
