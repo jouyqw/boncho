@@ -1,0 +1,18 @@
+{
+  "note": "본초죽염 칼럼 주제 후보입니다. content/columns.json 에 이미 있는 slug 는 건너뛰고 새 주제를 씁니다. 매일 서로 다른 카테고리를 섞으세요. ★모든 주제는 '효능 단정·질병 치료·체중감량·면역력' 같은 의학적 표현 없이, 생활 정보·올바른 사용법·사실 비교 중심으로만 다룹니다. 검색량 높은 키워드는 '제목/질문형 소제목'으로 노리되 본문은 과장 없이 씁니다.",
+  "categories": ["구강·생활 관리", "죽염 이야기", "소금·나트륨 상식", "요리·활용", "보관·고르는 법"],
+  "topics": [
+    { "slug": "sodium-daily-intake-guide", "category": "소금·나트륨 상식", "title": "하루 소금(나트륨) 얼마나? 세계 기준과 우리 식단", "angle": "권장 섭취 기준과 국·찌개 위주 한식에서 줄이는 현실적 방법(효능 아님, 식습관 정보)" },
+    { "slug": "low-sodium-cooking-tips", "category": "요리·활용", "title": "싱겁게 먹기 어렵다면? 맛 살리며 소금 줄이는 법", "angle": "산미·향신료·감칠맛 활용 등 조리 팁 중심" },
+    { "slug": "salt-storage-clumping", "category": "보관·고르는 법", "title": "소금이 굳고 눅눅해지는 이유와 보관법", "angle": "습기·굳음 방지 보관, 죽염 보관 요령" },
+    { "slug": "cooking-salt-by-dish", "category": "요리·활용", "title": "김치·국·구이… 요리마다 어떤 소금이 어울릴까", "angle": "용도별 소금 선택(정제염/천일염/죽염) 사실 비교" },
+    { "slug": "gargle-vs-mouthwash", "category": "구강·생활 관리", "title": "소금물 가글 vs 시판 가글액, 뭐가 다를까", "angle": "용도·성분·습관 차이 비교, 과장 없이" },
+    { "slug": "salt-label-reading", "category": "보관·고르는 법", "title": "소금 살 때 포장에서 꼭 봐야 할 표시 5가지", "angle": "원료·제조방식·성분표시 등 라벨 읽는 법" },
+    { "slug": "jukyeom-cooking-usage", "category": "요리·활용", "title": "죽염, 요리에 어떻게 쓰면 좋을까? 활용 가이드", "angle": "향이 강한 죽염을 소량·마무리용으로 쓰는 실전 팁" },
+    { "slug": "sea-salt-minerals-truth", "category": "소금·나트륨 상식", "title": "천일염이 미네랄 소금? 오해와 사실 정리", "angle": "미네랄 함량의 실제 의미, 과장 마케팅 구분법" },
+    { "slug": "salt-water-foot-hand-care", "category": "구강·생활 관리", "title": "소금물 족욕·세안, 알고 하면 좋은 점과 주의점", "angle": "생활 활용의 범위와 자극 주의(효능 단정 없이)" },
+    { "slug": "jukyeom-color-taste-guide", "category": "죽염 이야기", "title": "죽염 색이 다른 이유? 굽는 횟수와 맛의 관계", "angle": "굽는 횟수-색-맛의 관계, 자죽염 특성" },
+    { "slug": "salt-history-culture", "category": "죽염 이야기", "title": "소금은 왜 귀했을까? 소금의 역사와 죽염의 전통", "angle": "소금의 역사·문화, 죽염 전통 제법의 배경" },
+    { "slug": "sodium-and-water-balance", "category": "소금·나트륨 상식", "title": "짜게 먹으면 붓는다? 나트륨과 수분의 관계", "angle": "나트륨-수분 균형의 일반 상식(치료·감량 주장 아님)" }
+  ]
+}
