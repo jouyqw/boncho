@@ -16,7 +16,10 @@
 
 1. 저장소 루트에서 시작. `TZ=Asia/Seoul date +%F` 로 오늘 날짜 확인.
 2. `content/columns.json` 의 기존 slug·카테고리를 확인.
-3. `content/topic-bank.json` 에서 아직 없는 slug 로 **서로 다른 카테고리 2개**를 고름(하루 2편). 소진되면 원칙에 맞는 새 주제를 직접 생성(slug 중복 금지).
+3. `content/topic-bank.json` 에서 아직 없는 slug 를 고름. 소진되면 원칙에 맞는 새 주제를 직접 생성(slug 중복 금지).
+   - **발행 페이스**: 하루 3편이며, 한 세션이 3편을 몰아 쓰지 않습니다. 예약 세션 세 개가
+     1시간 간격(KST 07:37 / 08:37 / 09:37)으로 각각 1편씩 씁니다. 세션마다 `git pull` 후
+     기존 slug 를 확인하고, 최근 발행 카테고리를 피해 순환하세요.
 4. 각 글을 `content/columns.json` 배열 끝에 추가(아래 형식).
 5. 생성: `node scripts/generate-columns.mjs`
 6. 검증: `node scripts/validate-content.mjs` — **반드시 통과**. 실패하면 원인을 고쳐 다시.
