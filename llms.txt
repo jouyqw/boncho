@@ -13,5 +13,8 @@
 - 생활 정보와 올바른 사용법, 죽염과 일반 소금의 차이 등을 다룹니다.
 
 ## 칼럼 목록
+- [김치·국·구이, 요리마다 어떤 소금이 어울릴까](https://bonchojw.com/column/cooking-salt-by-dish/) — 요리·활용
+- [소금이 굳고 눅눅해지는 이유, 어떻게 보관할까](https://bonchojw.com/column/salt-storage-clumping/) — 보관·고르는 법
+- [하루 소금, 얼마나 먹고 있을까? 기준과 줄이는 법](https://bonchojw.com/column/sodium-daily-intake-guide/) — 소금·나트륨 상식
 - [죽염과 일반 소금, 뭐가 다를까? 종류별 차이 정리](https://bonchojw.com/column/jukyeom-vs-salt-difference/) — 죽염 이야기
 - [소금물 가글, 정말 효과 있을까? 올바른 방법과 죽염 이야기](https://bonchojw.com/column/saltwater-gargle-guide/) — 구강·생활 관리
