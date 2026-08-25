@@ -1,0 +1,61 @@
+name: 예약 칼럼 발행
+
+# 매일 칼럼을 쓰던 클라우드 예약 세션이 조용히 실패하는 날이 많아 8/15 이후 발행이 끊겼다.
+# 세션은 매일 실행됐지만 커밋이 들어오지 않았다. 그래서 "글 쓰기"와 "글 내보내기"를 나눈다.
+#   글쓰기 : content/queue/<slug>.json 에 publishAt 을 박아 미리 채워 둔다.
+#   발행   : 이 워크플로가 매일 한 편씩 columns.json 에 넣고 빌드해 커밋한다.
+
+on:
+  schedule:
+    - cron: "10 15 * * *" # 매일 00:10 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-queue
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 발행일 도래분 반영
+        id: promote
+        run: node scripts/publish-queue.mjs
+
+      - name: 칼럼 생성
+        if: steps.promote.outputs.published != '0'
+        run: node scripts/generate-columns.mjs
+
+      - name: 컴플라이언스 검증
+        if: steps.promote.outputs.published != '0'
+        run: node scripts/validate-content.mjs
+
+      - name: 커밋
+        if: steps.promote.outputs.published != '0'
+        run: |
+          if git diff --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git config user.name "publish-bot"
+          git config user.email "bot@auto.local"
+          git add -A
+          git commit -m "칼럼 발행: ${{ steps.promote.outputs.summary }}"
+          git push
+
+      - name: 큐 잔량 알림
+        run: |
+          left=$(ls content/queue/*.json 2>/dev/null | wc -l)
+          echo "### 큐 잔량: ${left}편" >> $GITHUB_STEP_SUMMARY
+          if [ "$left" -lt 7 ]; then
+            echo "큐가 7편 미만입니다. 채워 두세요." >> $GITHUB_STEP_SUMMARY
+          fi
