@@ -59,3 +59,9 @@ jobs:
           if [ "$left" -lt 7 ]; then
             echo "큐가 7편 미만입니다. 채워 두세요." >> $GITHUB_STEP_SUMMARY
           fi
+          # 큐가 비면 내일부터 발행이 멈춘다. 요약에만 남기면 아무도 보지 않으므로
+          # 워크플로를 실패시켜 GitHub 이 알림 메일을 보내게 한다.
+          if [ "$left" -eq 0 ]; then
+            echo "::error::큐가 비었습니다. 내일부터 발행이 멈춥니다. content/queue 를 채우세요."
+            exit 1
+          fi
