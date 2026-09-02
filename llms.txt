@@ -13,6 +13,7 @@
 - 생활 정보와 올바른 사용법, 죽염과 일반 소금의 차이 등을 다룹니다.
 
 ## 칼럼 목록
+- [죽염, 요리에 어떻게 쓰면 좋을까 활용 가이드](https://bonchojw.com/column/jukyeom-cooking-usage/) — 요리·활용
 - [천일염이 미네랄 소금이라는 말, 어디까지가 사실일까](https://bonchojw.com/column/sea-salt-minerals-truth/) — 소금·나트륨 상식
 - [죽염 색이 제품마다 다른 이유, 굽는 횟수와 맛의 관계](https://bonchojw.com/column/jukyeom-color-taste-guide/) — 죽염 이야기
 - [소금 살 때 포장에서 꼭 봐야 할 표시 다섯 가지](https://bonchojw.com/column/salt-label-reading/) — 보관·고르는 법
