@@ -131,7 +131,7 @@ ${(c.faqs || []).length ? `<h2>자주 묻는 질문</h2><div class="faq">${faqHt
 <p class="disclaimer">이 글은 일반적인 생활·건강 정보 제공을 위한 것으로, 의학적 진단·치료나 특정 효과를 보장하는 내용이 아닙니다. ${brand}을 비롯한 소금은 식품이며, 건강 상태나 증상에 대한 판단·치료는 의료 전문가와 상담하시기 바랍니다.</p>
 </section></article>
 </div></main>
-<footer class="foot"><div class="wrap">© ${brand} · 건강 칼럼</div></footer>
+<footer class="foot"><div class="wrap">© ${brand} · 건강 칼럼 · 홈페이지 제작 <a href="https://aubcompany.com/" rel="noopener">아비컴퍼니</a></div></footer>
 </body></html>`;
 }
 
@@ -155,7 +155,7 @@ function boardHtml(cols) {
 <ul class="board-list">${items}</ul>
 </div>
 </div></main>
-<footer class="foot"><div class="wrap">© ${brand} · 건강 칼럼</div></footer>
+<footer class="foot"><div class="wrap">© ${brand} · 건강 칼럼 · 홈페이지 제작 <a href="https://aubcompany.com/" rel="noopener">아비컴퍼니</a></div></footer>
 </body></html>`;
 }
 
