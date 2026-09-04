@@ -13,6 +13,7 @@
 - 생활 정보와 올바른 사용법, 죽염과 일반 소금의 차이 등을 다룹니다.
 
 ## 칼럼 목록
+- [짜게 먹은 다음 날 붓는 느낌, 나트륨과 수분의 관계](https://bonchojw.com/column/sodium-and-water-balance/) — 소금·나트륨 상식
 - [소금물 족욕과 세안, 하기 전에 알아 둘 점](https://bonchojw.com/column/salt-water-foot-hand-care/) — 구강·생활 관리
 - [죽염, 요리에 어떻게 쓰면 좋을까 활용 가이드](https://bonchojw.com/column/jukyeom-cooking-usage/) — 요리·활용
 - [천일염이 미네랄 소금이라는 말, 어디까지가 사실일까](https://bonchojw.com/column/sea-salt-minerals-truth/) — 소금·나트륨 상식
