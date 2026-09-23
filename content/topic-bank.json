@@ -4,6 +4,9 @@
   "_complianceNote": "죽염은 식품이다. '죽염효능'(월 5,270회)처럼 효능 검색이 가장 크지만, 식품표시광고법상 의학적 효능을 단정할 수 없다. 그래서 효능을 주장하는 대신 '무엇이 사실이고 무엇이 표시광고법 위반인지' 를 알려 주는 각도로 그 검색 의도를 받는다. 이게 이 사이트의 차별점이기도 하다. scripts/validate-content.mjs 가 배포 전에 한 번 더 막는다.",
   "categories": ["죽염 이야기", "소금·나트륨 상식", "요리·활용", "보관·고르는 법", "구강·생활 관리"],
   "topics": [
+    { "slug": "kyungbangwon-bamboo-salt-guide", "category": "죽염 이야기", "vol": 0, "ads": 10, "keyword": "경방원죽염", "angle": "경방원죽염을 찾는 소비자가 3회·9회·회색죽염·자죽염과 고체·분말을 구분하는 법. 공식 제품 표시와 제조 정보, 용도별 선택 기준만 다루고 효능은 주장하지 않는다" },
+    { "slug": "kyungbangwon-purple-salt-solid-powder", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "경방원 자죽염", "angle": "경방원 자죽염 고체형과 분말형의 사용 차이, 내용량과 단위가격 비교, 보관법을 구매 전 체크리스트로 정리한다" },
+    { "slug": "kyungbangwon-nine-roast-label", "category": "죽염 이야기", "vol": 0, "ads": 10, "keyword": "경방원 9회죽염", "angle": "9회 표기가 무엇을 뜻하는지, 제품명·원재료·제조원·식품유형에서 확인할 항목을 정리한다. 특정 온도나 성분은 확인 자료가 있을 때만 언급한다" },
     { "slug": "bamboo-salt-efficacy-claims-truth", "category": "죽염 이야기", "vol": 5270, "ads": 10, "keyword": "죽염효능", "angle": "죽염 효능을 검색하면 나오는 말들 중 무엇이 표시광고법상 쓸 수 없는 표현인지. 식품에 허용되는 표현과 금지되는 표현의 경계를 소비자 입장에서 정리한다. 효능을 주장하지 않는다" },
     { "slug": "purple-bamboo-salt-nine-times", "category": "죽염 이야기", "vol": 3270, "ads": 10, "keyword": "자죽염", "angle": "자죽염이라 부르는 것의 정체와 9회 죽염의 관계. 색이 왜 보라빛인지, 굽는 횟수에 따라 무엇이 달라지는지 제조 공정 사실만" },
     { "slug": "bamboo-salt-nine-roast-standard", "category": "죽염 이야기", "vol": 1650, "ads": 10, "keyword": "9회죽염", "angle": "9회라는 숫자가 무엇을 뜻하는지, 횟수를 어떻게 확인하는지, 표시사항에서 봐야 할 항목" },
