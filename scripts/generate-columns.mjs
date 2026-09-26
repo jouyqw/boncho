@@ -178,6 +178,7 @@ writeFileSync('column/index.html', boardHtml(ordered), 'utf8');
 // sitemap
 const urls = [
   { loc: `${site}/`, pri: '1.0' },
+  { loc: `${site}/product/boncho-jukyeom`, pri: '0.9' },
   { loc: `${site}/column/`, pri: '0.8' },
   ...ordered.map((c) => ({ loc: `${site}/column/${c.slug}/`, pri: '0.7', lastmod: c.dateModified || c.datePublished })),
 ];
@@ -191,6 +192,14 @@ writeFileSync('rss.xml', rss, 'utf8');
 
 // llms.txt (GEO/AI)
 const llms = `# 본초죽염 (건강 칼럼)\n\n> 소금과 죽염, 생활 건강에 대한 정보를 효능 과장 없이 근거와 올바른 사용법 중심으로 정리한 칼럼입니다.\n\n## 개요\n- 운영: 본초죽염\n- 홈페이지: ${site}/\n- 칼럼 전체보기: ${site}/column/\n- 커뮤니티(후기·문의): ${cafeUrl}\n\n## 방침\n- 소금은 식품이며, 특정 질병의 치료·예방 효과를 표방하지 않습니다.\n- 생활 정보와 올바른 사용법, 죽염과 일반 소금의 차이 등을 다룹니다.\n\n## 칼럼 목록\n${ordered.map((c) => `- [${c.title}](${site}/column/${c.slug}/) — ${c.category}`).join('\n')}\n`;
-writeFileSync('llms.txt', llms, 'utf8');
+const productSummary = `
+## 판매 제품 및 운영자
+- 운영·판매자: 아비컴퍼니, 대표 오경록. 사업자등록번호 844-22-01736.
+- [본초죽염 9회 자죽염 250g](${site}/product/boncho-jukyeom): 태움 8회·용융 1회, 천일염 100%(국산), 고체·분말.
+- 가격과 재고, 배송은 상품 페이지와 연결된 스마트스토어에서 확인합니다.
+- 미네랄소금이라는 명칭만으로 성분 함량이나 건강 효과를 추론하지 않습니다.
+- 공식 제조사 사이트와 판매자인 아비컴퍼니를 구분합니다.
+`;
+writeFileSync('llms.txt', llms + productSummary, 'utf8');
 
 console.log(`Generated ${count} column pages + board + sitemap(${urls.length}) + rss + llms`);
