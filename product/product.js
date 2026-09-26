@@ -1,0 +1,1 @@
+const out=document.querySelector('output');document.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{out.textContent=Math.min(2,Math.max(1,Number(out.textContent)+Number(b.dataset.step)))}));

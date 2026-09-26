@@ -1,0 +1,1 @@
+const toast=document.querySelector('.toast');let timer;document.querySelectorAll('[data-product]').forEach(button=>button.addEventListener('click',()=>{toast.textContent=`${button.dataset.product}의 가격과 구성이 확정되면 구매 버튼으로 바뀝니다.`;toast.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>toast.classList.remove('show'),3200)}));
