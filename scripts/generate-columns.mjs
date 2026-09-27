@@ -91,7 +91,7 @@ function articleHtml(c, related) {
     '@graph': [
       {
         '@type': 'Article', '@id': `${url}#article`, headline: c.title, description: c.description,
-        author: { '@type': 'Organization', name: brand, url: site },
+        author: { '@type': 'Person', name: '오경록', jobTitle: '아비컴퍼니 대표', worksFor: { '@type': 'Organization', name: brand, url: site } },
         publisher: { '@type': 'Organization', name: brand, url: site },
         datePublished: c.datePublished, dateModified: c.dateModified || c.datePublished,
         mainEntityOfPage: url, about: c.keywords || [], inLanguage: 'ko-KR',
@@ -122,8 +122,9 @@ function articleHtml(c, related) {
 <nav class="crumb"><a href="/">홈</a> &gt; <a href="/column/">건강 칼럼</a> &gt; ${esc(c.category)}</nav>
 <article class="article">
 <header class="head"><span class="badge">${esc(c.category)}</span><h1>${esc(c.title)}</h1><p class="lead">${mdBold(c.lead)}</p>
-<div class="byline"><span>${brand}</span><span>정보 칼럼</span><span>${esc(c.datePublished)}</span></div></header>
+<div class="byline"><span>오경록 대표</span><span>${brand} 운영·판매자 칼럼</span><span>${esc(c.datePublished)}</span></div></header>
 <section class="body">
+<div class="callout"><span class="label">대표가 직접 설명합니다</span><p>이 글은 아비컴퍼니 오경록 대표가 제품을 판매하며 확인한 표시사항과 고객이 자주 묻는 선택 기준을 바탕으로 작성했습니다. 실제 구매자인 척하지 않으며, 확인 가능한 제품 정보와 사용 기준을 중심으로 설명합니다.</p></div>
 ${renderBlocks(c.body)}
 ${relatedHtml}
 ${(c.faqs || []).length ? `<h2>자주 묻는 질문</h2><div class="faq">${faqHtml}</div>` : ''}
