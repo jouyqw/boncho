@@ -164,6 +164,13 @@ const cols = JSON.parse(readFileSync('content/columns.json', 'utf8'));
 // 최신순 정렬(날짜 내림차순, 동일 날짜는 배열 뒤가 최신)
 const ordered = cols.map((c, i) => ({ c, i })).sort((a, b) => (a.c.datePublished < b.c.datePublished ? 1 : a.c.datePublished > b.c.datePublished ? -1 : b.i - a.i)).map((x) => x.c);
 
+// 홈페이지 BONCHO NOTE도 최신 발행 칼럼으로 자동 갱신한다.
+// 예전에는 두 링크가 고정돼 새 글을 발행해도 홈페이지에서 찾을 수 없었다.
+const latestHomeCards = ordered.slice(0, 4).map((c) => `<a class="editorial-card" href="/column/${c.slug}/"><span>${esc(c.category)}</span><strong>${esc(c.title)}</strong><em>읽어보기 →</em></a>`).join('');
+let home = readFileSync('index.html', 'utf8');
+home = home.replace(/<section class="editorial section">[\s\S]*?<\/section>/, `<section class="editorial section"><div><p class="eyebrow">BONCHO NOTE</p><h2>소금에 관한 정보,<br>쉽고 정확하게.</h2><a href="/column/" class="text-link">칼럼 전체 보기 →</a></div>${latestHomeCards}</section>`);
+writeFileSync('index.html', home, 'utf8');
+
 let count = 0;
 for (const c of cols) {
   const related = (c.related || []).filter((r) => cols.some((x) => `/column/${x.slug}/` === r.href.replace(/\/?$/, '/')));
