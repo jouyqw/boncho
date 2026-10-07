@@ -1,7 +1,7 @@
 /**
  * 예약 칼럼 발행기 — node scripts/publish-queue.mjs [--dry]
  *
- * content/queue/*.json 중 publishAt 이 오늘(KST) 이하인 글 한 편을
+ * content/queue/*.json 중 publishAt 이 오늘(KST) 이하인 글을 하루 최대 두 편
  * data/columns.json 배열 끝에 붙인다. 이후 generate-columns.mjs 는 워크플로가 실행한다.
  *
  * 왜 이렇게 하나: 매일 칼럼을 쓰던 클라우드 예약 세션이 조용히 실패하는 날이 많았다.
@@ -47,33 +47,27 @@ if (!due.length) {
   process.exit(0);
 }
 
-// 밀린 날짜가 여러 개여도 하루 한 편만 낸다. 한꺼번에 쏟으면 대량생성 신호가 된다.
+// 사용자의 운영 기준에 따라 하루 최대 두 편만 낸다.
 due.sort((a, b) => a.at.localeCompare(b.at));
-const [{ f, item, at }] = due;
-
-if (known.has(item.slug)) {
-  console.warn(`건너뜀 ${item.slug} — 이미 발행된 글입니다. 큐에서만 제거합니다.`);
-  if (!DRY) fs.rmSync(path.join(QUEUE, f));
-  emit('published=0');
-  process.exit(0);
+const selected = due.slice(0, 2);
+const published = [];
+for (const { f, item, at } of selected) {
+  if (known.has(item.slug)) {
+    console.warn(`건너뜀 ${item.slug} — 이미 발행된 글입니다. 큐에서만 제거합니다.`);
+    if (!DRY) fs.rmSync(path.join(QUEUE, f));
+    continue;
+  }
+  const { publishAt, ...rest } = item;
+  const entry = { ...rest, datePublished: rest.datePublished || at, dateModified: rest.dateModified || at };
+  if (DRY) { console.log(`[dry] ${entry.slug} (${at}) — ${entry.title}`); continue; }
+  columns.push(entry);
+  known.add(entry.slug);
+  fs.rmSync(path.join(QUEUE, f));
+  published.push(entry);
 }
 
-const { publishAt, ...rest } = item;
-const entry = {
-  ...rest,
-  datePublished: rest.datePublished || at,
-  dateModified: rest.dateModified || at,
-};
-
-if (DRY) {
-  console.log(`[dry] ${entry.slug} (${at}) — ${entry.title}`);
-  process.exit(0);
-}
-
-columns.push(entry);
-fs.writeFileSync(COLUMNS, `${JSON.stringify(columns, null, 2)}\n`, 'utf8');
-fs.rmSync(path.join(QUEUE, f));
-
-emit('published=1');
-emit(`summary=${entry.title.slice(0, 180)}`);
-console.log(`\n발행 ${entry.slug} (${at}), 큐 잔량 ${files.length - 1}편`);
+if (DRY) process.exit(0);
+if (published.length) fs.writeFileSync(COLUMNS, `${JSON.stringify(columns, null, 2)}\n`, 'utf8');
+emit(`published=${published.length}`);
+emit(`summary=${published.map((entry) => entry.title).join(' · ').slice(0, 180)}`);
+console.log(`\n발행 ${published.length}편, 큐 잔량 ${files.length - selected.length}편`);

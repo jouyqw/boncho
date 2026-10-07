@@ -39,9 +39,9 @@ const LOG = path.join(ROOT, 'refill.log');
 const LOCK = path.join(ROOT, '.refill.lock');
 const DESK = path.join(process.env.USERPROFILE || '', 'Desktop', '본초죽염_칼럼보충_실패.txt');
 
-const THRESHOLD = 6;
-const TARGET = 14;
-const MAX_ADD = 6;
+const THRESHOLD = 10;
+const TARGET = 28;
+const MAX_ADD = 12;
 const RETRY = 2;
 const BATCH_TIMEOUT = 30 * 60 * 1000;
 
@@ -213,6 +213,7 @@ function buildPrompt(topic, date, samples, titles, note) {
 - 문단은 1~3문장으로 짧게. 모바일 가독성 우선.
 - 글쓴이는 본초죽염을 직접 운영·판매하는 아비컴퍼니 오경록 대표다. 실제 구매자나 제3자인 척하지 않는다.
 - 첫 두 문단 안에서 "판매자인 제가 이 제품을 권하는 이유"를 확인 가능한 사실로 분명히 말한다.
+- 같은 날 발행되는 다른 글과 결론·사례·구매 이유를 반복하지 않는다. 검색자의 질문에 맞는 실제 음식 사용 장면을 구체적으로 든다.
 - 단순히 좋다고 반복하지 말고 원료·제조표시·고체/분말 선택·용량·사용 편의처럼 고객이 얻는 구체적 편익으로 연결한다.
 - "왜 이 제품을 판매하는가", "누구에게 잘 맞는가", "누구에게는 맞지 않을 수 있는가", "구매 전 확인할 것"을 포함한다.
 - 대표가 고객에게 직접 설명하듯 쉽고 단정한 존댓말로 쓴다. 과장된 감탄사, 키워드 억지 반복, 경쟁사 비방은 금지한다.
@@ -307,8 +308,19 @@ if (fs.existsSync(LOCK)) {
 fs.writeFileSync(LOCK, stamp());
 
 const targets = free.slice(0, Math.min(need, free.length));
-const base = lastAt > TODAY ? lastAt : TODAY;
-const plan = targets.map((t, i) => ({ topic: t, date: addDays(base, i + 1) }));
+const dailyCounts = new Map();
+q.forEach((item) => {
+  const date = String(item.publishAt).slice(0, 10);
+  dailyCounts.set(date, (dailyCounts.get(date) || 0) + 1);
+});
+const slotDates = [];
+let slotDate = TODAY;
+while (slotDates.length < targets.length) {
+  const used = dailyCounts.get(slotDate) || 0;
+  for (let n = used; n < 2 && slotDates.length < targets.length; n += 1) slotDates.push(slotDate);
+  slotDate = addDays(slotDate, 1);
+}
+const plan = targets.map((t, i) => ({ topic: t, date: slotDates[i] }));
 log(`${plan.length}건 보충 시작 → ${plan[0].date} ~ ${plan[plan.length - 1].date}`);
 
 const seenTitles = new Set([...live.map((c) => c.title), ...q.map((c) => c.title)]);
@@ -366,7 +378,7 @@ if (GIT) {
     git(['add', '--', 'content/queue', 'content/topic-bank.json']);
     git(['-c', 'core.autocrlf=false', 'commit', '-q', '-m', `칼럼 큐 보충: ${written.length}편 (${plan[0].date} ~)`]);
     git(['push', '-q', 'origin', 'main']);
-    log('GitHub 푸시 완료 — publish-queue 가 매일 00:10 KST 에 한 편씩 발행');
+    log('GitHub 푸시 완료 — publish-queue 가 매일 00:10 KST 에 최대 두 편씩 발행');
   } catch (e) {
     fail('커밋·푸시 실패', String(e.stdout || e.stderr || e.message));
   }
