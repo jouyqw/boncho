@@ -13,6 +13,7 @@
 - 생활 정보와 올바른 사용법, 죽염과 일반 소금의 차이 등을 다룹니다.
 
 ## 칼럼 목록
+- [게랑드소금과 국산 소금, 표시 의무는 어떻게 다를까](https://bonchojw.com/column/guerande-and-imported-salt/) — 보관·고르는 법
 - [꽃소금과 정제소금, 만드는 과정은 어디서 갈릴까](https://bonchojw.com/column/flower-salt-vs-refined-salt/) — 소금·나트륨 상식
 - [굵은소금과 꽃소금, 절임·간·마무리 중 어디에 쓸까](https://bonchojw.com/column/coarse-salt-usage-guide/) — 요리·활용
 - [소금그라인더, 입자 굵기로 간이 달라지는 이유와 굳을 때 해결법](https://bonchojw.com/column/salt-grinder-and-particle/) — 요리·활용
