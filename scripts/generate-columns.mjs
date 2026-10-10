@@ -26,6 +26,7 @@ const STYLE = `:root{--green:#03c75a;--green-d:#009f47;--navy:#12324a;--teal:#1f
 h1{font-size:clamp(25px,3.9vw,36px);line-height:1.34;letter-spacing:-.03em;margin:15px 0 15px;color:var(--navy)}
 .lead{background:var(--navy);color:#fff;border-left:5px solid var(--gold);padding:17px 19px;border-radius:10px;font-size:16.5px;font-weight:700}
 .byline{margin-top:15px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 15px}
+.special-editorial{font-family:'Noto Sans KR','Pretendard','Apple SD Gothic Neo',sans-serif}.special-editorial h1,.special-editorial h2,.special-editorial .lead{font-family:'Noto Serif KR','Batang',serif}.special-editorial .body p{font-size:17px;line-height:1.95;letter-spacing:-.015em}.special-editorial .body h2{font-size:24px;padding:12px 15px;border-left:5px solid var(--gold);background:#fbf7ee;border-radius:0 8px 8px 0}.product-gallery{margin:0;padding:24px 42px 4px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px;background:#fff}.product-gallery figure{margin:0}.product-gallery figure:first-child{grid-row:span 2}.product-gallery img{display:block;width:100%;height:100%;min-height:180px;object-fit:cover;border-radius:10px;background:#f3f4f3}.product-gallery figcaption{font-size:12px;line-height:1.6;color:var(--muted);margin-top:7px}.product-gallery-note{grid-column:1/-1;margin:0 0 10px;font-size:12px;color:var(--muted)}
 .body{padding:34px 42px 42px}.body h2{font-size:22px;line-height:1.42;letter-spacing:-.02em;margin:42px 0 12px;color:var(--navy)}.body h2:first-of-type{margin-top:22px}
 .body p{margin:0 0 16px;font-size:16.5px}.body strong{color:var(--navy);font-weight:900}
 .summary{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:19px 21px;margin:22px 0}.summary b{display:block;color:var(--navy);margin-bottom:8px}.summary ul{margin:0;padding-left:20px}.summary li{margin:6px 0}
@@ -46,7 +47,7 @@ h1{font-size:clamp(25px,3.9vw,36px);line-height:1.34;letter-spacing:-.03em;margi
 .board-list{list-style:none;margin:0;padding:0}.board-list li{border-bottom:1px solid var(--line)}.board-list li:last-child{border-bottom:0}
 .board-list a{display:block;padding:20px 34px;text-decoration:none;color:var(--ink)}.board-list a:hover{background:var(--soft)}
 .board-cat{font-size:12px;font-weight:900;color:#155059}.board-title{display:block;font-size:18px;font-weight:800;color:var(--navy);margin:5px 0 6px;letter-spacing:-.02em}.board-desc{font-size:14px;color:var(--muted)}.board-date{font-size:12px;color:#9aa7ac;margin-top:6px}
-@media(max-width:720px){.head{padding:30px 18px 24px}.body{padding:26px 18px 36px}.body p{font-size:16px}.body h2{font-size:20px;margin:36px 0 10px}.ig-grid{grid-template-columns:1fr}table{min-width:0}tbody th{width:38%}.board-h,.board-list a{padding-left:18px;padding-right:18px}}`;
+@media(max-width:720px){.head{padding:30px 18px 24px}.body{padding:26px 18px 36px}.body p{font-size:16px}.body h2{font-size:20px;margin:36px 0 10px}.ig-grid{grid-template-columns:1fr}table{min-width:0}tbody th{width:38%}.board-h,.board-list a{padding-left:18px;padding-right:18px}.special-editorial .body p{font-size:16px;line-height:1.9}.special-editorial .body h2{font-size:21px;line-height:1.55}.product-gallery{padding:18px;grid-template-columns:1fr 1fr;gap:10px}.product-gallery figure:first-child{grid-column:1/-1;grid-row:auto}.product-gallery img{min-height:140px}.product-gallery figure:first-child img{aspect-ratio:1.1}.product-gallery figcaption{font-size:11px}}`;
 
 function renderBlocks(body) {
   const out = [];
@@ -82,6 +83,8 @@ function renderBlocks(body) {
 
 function articleHtml(c, related) {
   const url = `${site}/column/${c.slug}/`;
+  const specialEditorial = c.slug === 'seasoned-salt-additives';
+  const detailGallery = specialEditorial ? `<section class="product-gallery" aria-label="본초죽염 실제 제품 상세 사진"><figure><img src="/assets/detail/boncho-bottle.png" alt="본초죽염 9회 자죽염 250g 실제 제품 용기" width="1200" height="1200" loading="eager"><figcaption>본초죽염 9회 자죽염 250g 실제 제품 용기</figcaption></figure><figure><img src="/assets/detail/boncho-crystals-open.png" alt="용기 안에 담긴 본초죽염 고체 결정" width="1200" height="1200" loading="lazy"><figcaption>고체형 결정의 실제 모양</figcaption></figure><figure><img src="/assets/detail/boncho-crystals-hand.png" alt="손 위에 올려 크기를 보여 준 본초죽염 결정" width="1200" height="1200" loading="lazy"><figcaption>손 위에서 확인한 결정 크기</figcaption></figure><p class="product-gallery-note">상세페이지에 사용하는 실제 제품 사진입니다. 색과 결정 크기는 촬영 환경과 개체에 따라 다르게 보일 수 있습니다.</p></section>` : '';
   const faqHtml = (c.faqs || []).map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
   const relatedHtml = related.length
     ? `<div class="related"><b>함께 보면 좋은 글</b>${related.map((r) => `<a href="${esc(r.href)}">${esc(r.label)} →</a>`).join('')}</div>`
@@ -110,19 +113,21 @@ function articleHtml(c, related) {
 <meta name="description" content="${esc(c.description)}">
 <meta name="author" content="${brand}">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+${specialEditorial ? '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">' : ''}
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="article"><meta property="og:locale" content="ko_KR"><meta property="og:site_name" content="${brand} 건강 칼럼">
 <meta property="og:title" content="${esc(c.title)}"><meta property="og:description" content="${esc(c.description)}"><meta property="og:url" content="${url}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(c.title)}"><meta name="twitter:description" content="${esc(c.description)}">
 <style>${STYLE}</style>
 <script type="application/ld+json">${JSON.stringify(schema)}</script>
-</head><body>
+</head><body class="${specialEditorial ? 'special-editorial' : ''}">
 <header class="top"><div class="wrap"><a class="brand" href="/">${brand} · 건강 칼럼</a><a class="cta" href="/column/">칼럼 전체보기 →</a></div></header>
 <main class="page"><div class="wrap">
 <nav class="crumb"><a href="/">홈</a> &gt; <a href="/column/">건강 칼럼</a> &gt; ${esc(c.category)}</nav>
 <article class="article">
 <header class="head"><span class="badge">${esc(c.category)}</span><h1>${esc(c.title)}</h1><p class="lead">${mdBold(c.lead)}</p>
 <div class="byline"><span>오경록 대표</span><span>${brand} 운영·판매자 칼럼</span><span>${esc(c.datePublished)}</span></div></header>
+${detailGallery}
 <section class="body">
 <div class="callout"><span class="label">대표가 직접 설명합니다</span><p>이 글은 아비컴퍼니 오경록 대표가 제품을 판매하며 확인한 표시사항과 고객이 자주 묻는 선택 기준을 바탕으로 작성했습니다. 실제 구매자인 척하지 않으며, 확인 가능한 제품 정보와 사용 기준을 중심으로 설명합니다.</p></div>
 ${renderBlocks(c.body)}
