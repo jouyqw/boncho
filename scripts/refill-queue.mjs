@@ -9,7 +9,7 @@
  *
  * 구조
  *   content/queue/<slug>.json 이 "초안 + publishAt" 이다.
- *   .github/workflows/publish-queue.yml 이 매일 00:10 KST 에 발행일이 된 것 한 편을
+ *   .github/workflows/publish-queue.yml 이 매일 00:10 KST 에 발행일이 된 것 최대 두 편을
  *   content/columns.json 으로 옮기고 generate-columns.mjs 로 페이지를 다시 만든다.
  *
  *   발행 경로에는 LLM 이 끼지 않는다. 여기서 채우는 건 큐뿐이다.

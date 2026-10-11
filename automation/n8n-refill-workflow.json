@@ -1,0 +1,45 @@
+[
+  {
+    "id": "BonchoColumnRefill01",
+    "name": "본초죽염 칼럼 큐 자동 보충",
+    "active": true,
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "0 1 * * *"
+              }
+            ]
+          }
+        },
+        "id": "a01a7585-9ab3-4873-9fe7-f875157e5584",
+        "name": "매일 오전 1시 큐 점검",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [0, 0]
+      },
+      {
+        "parameters": {
+          "command": "node \"C:\\Users\\c\\boncho\\scripts\\refill-queue.mjs\" --git"
+        },
+        "id": "77a33bfa-32e9-4764-af0a-d43a37da87ee",
+        "name": "부족한 큐 생성 검수 푸시",
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [280, 0]
+      }
+    ],
+    "connections": {
+      "매일 오전 1시 큐 점검": {
+        "main": [[{"node":"부족한 큐 생성 검수 푸시","type":"main","index":0}]]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "timezone": "Asia/Seoul"
+    }
+  }
+]
