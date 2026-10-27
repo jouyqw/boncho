@@ -259,7 +259,7 @@ const FORCE = fi >= 0 ? Math.max(1, Math.min(MAX_ADD, Number(argv[fi + 1]) || 1)
 fs.mkdirSync(QUEUE, { recursive: true });
 
 if (GIT) {
-  try { git(['fetch', 'origin', 'main']); git(['merge', '--ff-only', 'origin/main']); log('원격 반영'); }
+  try { git(['fetch', 'origin', 'main']); git(['rebase', 'origin/main']); log('원격 반영'); }
   catch (e) { fail('원격과 갈라짐 — 로컬 변경을 정리해야 합니다', String(e.stdout || e.message)); }
 
   // 추적되지 않은 큐 파일이 남아 있으면 먼저 올린다.
@@ -377,7 +377,14 @@ if (GIT) {
   try {
     git(['add', '--', 'content/queue', 'content/topic-bank.json']);
     git(['-c', 'core.autocrlf=false', 'commit', '-q', '-m', `칼럼 큐 보충: ${written.length}편 (${plan[0].date} ~)`]);
-    git(['push', '-q', 'origin', 'main']);
+    try {
+      git(['push', '-q', 'origin', 'main']);
+    } catch {
+      // 발행 워크플로가 같은 순간 먼저 커밋했으면 최신 원격 위로 한 번만 재배치한다.
+      git(['fetch', 'origin', 'main']);
+      git(['rebase', 'origin/main']);
+      git(['push', '-q', 'origin', 'main']);
+    }
     log('GitHub 푸시 완료 — publish-queue 가 매일 00:10 KST 에 최대 두 편씩 발행');
   } catch (e) {
     fail('커밋·푸시 실패', String(e.stdout || e.stderr || e.message));
