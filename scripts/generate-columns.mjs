@@ -8,7 +8,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 const site = 'https://bonchojw.com';
 const brand = '본초죽염';
 const cafeUrl = 'https://cafe.naver.com/healthnothes/4';
-const productGo = '/go?to=product&utm_source=column&utm_medium=article';
+const productGo = (slug, position) => `/go?to=product&utm_source=column&utm_medium=article&utm_campaign=${encodeURIComponent(slug)}&utm_content=${position}`;
 
 const esc = (v = '') => String(v)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
@@ -39,6 +39,7 @@ h1{font-size:clamp(25px,3.9vw,36px);line-height:1.34;letter-spacing:-.03em;margi
 .faq{margin-top:14px}.faq details{border-top:1px solid var(--line);padding:15px 2px}.faq details:last-child{border-bottom:1px solid var(--line)}.faq summary{cursor:pointer;font-weight:850;color:var(--navy)}.faq p{margin:9px 0 2px;color:#475467}
 .related{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:26px 0}.related b{display:block;color:var(--navy);margin-bottom:8px}.related a{display:block;color:var(--teal);font-weight:800;margin:5px 0;text-decoration:none}
 .community{margin-top:30px;background:linear-gradient(135deg,var(--navy),#123f4a);color:#fff;padding:22px;border-radius:12px}.community b{font-size:16px}.community a{display:inline-block;margin-top:10px;color:#0f2b33;background:#eafff1;padding:9px 15px;border-radius:6px;text-decoration:none;font-weight:900;margin-right:8px}
+.article-greeting{font-size:18px!important;font-weight:900;color:var(--navy);border-left:4px solid var(--green);padding-left:13px}.product-cta{margin:24px 0;padding:22px;border-radius:14px;background:linear-gradient(135deg,#eefaf3,#fff8e8);border:1px solid #cce8d7}.product-cta b{display:block;font-size:20px;color:var(--navy);margin-bottom:6px}.product-cta p{margin-bottom:12px}.product-cta a{display:inline-block;background:var(--green-d);color:#fff;text-decoration:none;font-weight:900;padding:12px 18px;border-radius:8px;box-shadow:0 6px 16px rgba(0,159,71,.18)}
 .disclaimer{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot{padding:26px 0;color:var(--muted);font-size:13px}
 .board{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 16px 46px rgba(18,50,74,.08)}
@@ -47,7 +48,8 @@ h1{font-size:clamp(25px,3.9vw,36px);line-height:1.34;letter-spacing:-.03em;margi
 .board-list{list-style:none;margin:0;padding:0}.board-list li{border-bottom:1px solid var(--line)}.board-list li:last-child{border-bottom:0}
 .board-list a{display:block;padding:20px 34px;text-decoration:none;color:var(--ink)}.board-list a:hover{background:var(--soft)}
 .board-cat{font-size:12px;font-weight:900;color:#155059}.board-title{display:block;font-size:18px;font-weight:800;color:var(--navy);margin:5px 0 6px;letter-spacing:-.02em}.board-desc{font-size:14px;color:var(--muted)}.board-date{font-size:12px;color:#9aa7ac;margin-top:6px}
-@media(max-width:720px){.head{padding:30px 18px 24px}.body{padding:26px 18px 36px}.body p{font-size:16px}.body h2{font-size:20px;margin:36px 0 10px}.ig-grid{grid-template-columns:1fr}table{min-width:0}tbody th{width:38%}.board-h,.board-list a{padding-left:18px;padding-right:18px}.special-editorial .body p{font-size:16px;line-height:1.9}.special-editorial .body h2{font-size:21px;line-height:1.55}.product-gallery{padding:18px;grid-template-columns:1fr 1fr;gap:10px}.product-gallery figure:first-child{grid-column:1/-1;grid-row:auto}.product-gallery img{min-height:140px}.product-gallery figure:first-child img{aspect-ratio:1.1}.product-gallery figcaption{font-size:11px}}`;
+@media(max-width:720px){.wrap{padding:0 12px}.head{padding:28px 18px 23px}.body{padding:24px 18px 34px}.body p{font-size:16px;line-height:1.82}.body h2{font-size:20px;margin:34px 0 10px}.ig-grid{grid-template-columns:1fr}table{min-width:0}tbody th{width:38%}.board-h,.board-list a{padding-left:18px;padding-right:18px}.special-editorial .body p{font-size:16px;line-height:1.9}.special-editorial .body h2{font-size:21px;line-height:1.55}.product-gallery{padding:18px;grid-template-columns:1fr 1fr;gap:10px}.product-gallery figure:first-child{grid-column:1/-1;grid-row:auto}.product-gallery img{min-height:140px}.product-gallery figure:first-child img{aspect-ratio:1.1}.product-gallery figcaption{font-size:11px}.product-cta{padding:19px 17px}.product-cta a{display:block;text-align:center}}
+`;
 
 function renderBlocks(body) {
   const out = [];
@@ -84,7 +86,9 @@ function renderBlocks(body) {
 function articleHtml(c, related) {
   const url = `${site}/column/${c.slug}/`;
   const specialEditorial = c.slug === 'seasoned-salt-additives';
-  const detailGallery = specialEditorial ? `<section class="product-gallery" aria-label="본초죽염 실제 제품 상세 사진"><figure><img src="/assets/detail/boncho-bottle.png" alt="본초죽염 9회 자죽염 250g 실제 제품 용기" width="1200" height="1200" loading="eager"><figcaption>본초죽염 9회 자죽염 250g 실제 제품 용기</figcaption></figure><figure><img src="/assets/detail/boncho-crystals-open.png" alt="용기 안에 담긴 본초죽염 고체 결정" width="1200" height="1200" loading="lazy"><figcaption>고체형 결정의 실제 모양</figcaption></figure><figure><img src="/assets/detail/boncho-crystals-hand.png" alt="손 위에 올려 크기를 보여 준 본초죽염 결정" width="1200" height="1200" loading="lazy"><figcaption>손 위에서 확인한 결정 크기</figcaption></figure><p class="product-gallery-note">상세페이지에 사용하는 실제 제품 사진입니다. 색과 결정 크기는 촬영 환경과 개체에 따라 다르게 보일 수 있습니다.</p></section>` : '';
+  const detailGallery = `<section class="product-gallery" aria-label="본초죽염 실제 제품 사진"><figure><img src="/assets/detail/boncho-bottle.png" alt="본초죽염 9회 자죽염 250g 제품 용기" width="1200" height="1200" loading="eager"><figcaption>본초죽염 9회 자죽염 250g 제품</figcaption></figure><figure><img src="/assets/detail/boncho-crystals-open.png" alt="용기에 담긴 본초죽염 고체 결정" width="1200" height="1200" loading="lazy"><figcaption>용기 안 고체형 결정의 모습</figcaption></figure><p class="product-gallery-note">제품의 색과 결정 크기는 촬영 환경과 개체에 따라 다르게 보일 수 있습니다.</p></section>`;
+  const midProduct = productGo(c.slug, 'mid_cta');
+  const bottomProduct = productGo(c.slug, 'bottom_cta');
   const faqHtml = (c.faqs || []).map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
   const relatedHtml = related.length
     ? `<div class="related"><b>함께 보면 좋은 글</b>${related.map((r) => `<a href="${esc(r.href)}">${esc(r.label)} →</a>`).join('')}</div>`
@@ -129,15 +133,18 @@ ${specialEditorial ? '<link rel="preconnect" href="https://fonts.googleapis.com"
 <div class="byline"><span>오경록 대표</span><span>${brand} 운영·판매자 칼럼</span><span>${esc(c.datePublished)}</span></div></header>
 ${detailGallery}
 <section class="body">
-<div class="callout"><span class="label">대표가 직접 설명합니다</span><p>이 글은 아비컴퍼니 오경록 대표가 제품을 판매하며 확인한 표시사항과 고객이 자주 묻는 선택 기준을 바탕으로 작성했습니다. 실제 구매자인 척하지 않으며, 확인 가능한 제품 정보와 사용 기준을 중심으로 설명합니다.</p></div>
+<p class="article-greeting">안녕하세요. 본초죽염 대표 오경록입니다.</p>
+<p>고객님들이 제품을 고르실 때 자주 물어보시는 내용을 바탕으로, 오늘은 ${esc(c.title)}에 관해 쉽게 설명드리겠습니다.</p>
+<div class="product-cta"><b>본초죽염 9회 자죽염, 제품부터 확인해 보세요</b><p>형태·내용량·표시사항과 실제 제품 사진을 확인한 뒤 내 사용 목적에 맞는지 비교해 보시기 바랍니다.</p><a href="${midProduct}" data-column-cta="product" data-position="mid">제품 상세정보 보기 →</a></div>
 ${renderBlocks(c.body)}
 ${relatedHtml}
 ${(c.faqs || []).length ? `<h2>자주 묻는 질문</h2><div class="faq">${faqHtml}</div>` : ''}
-<div class="community"><b>죽염 사용 후기와 궁금한 점, 함께 나눠요</b><br>실제 사용 후기와 질문은 아래 커뮤니티에서 확인하실 수 있습니다.<br><a href="${cafeUrl}" target="_blank" rel="noopener">네이버 카페 후기·문의 →</a><a href="${productGo}" target="_blank" rel="noopener">제품 보기 →</a></div>
+<div class="community"><b>구매 전 더 확인하고 싶으신가요?</b><br>표시사항과 사용법은 제품 상세페이지에서, 추가 질문은 네이버 카페에서 확인해 주세요.<br><a href="${bottomProduct}" data-column-cta="product" data-position="bottom">제품 상세정보 보기 →</a><a href="${cafeUrl}" target="_blank" rel="noopener" data-column-cta="consult" data-position="bottom">네이버 카페 문의 →</a></div>
 <p class="disclaimer">이 글은 일반적인 생활·건강 정보 제공을 위한 것으로, 의학적 진단·치료나 특정 효과를 보장하는 내용이 아닙니다. ${brand}을 비롯한 소금은 식품이며, 건강 상태나 증상에 대한 판단·치료는 의료 전문가와 상담하시기 바랍니다.</p>
 </section></article>
 </div></main>
 <footer class="foot"><div class="wrap">© ${brand} · 건강 칼럼 · 홈페이지 제작 <a href="https://aubcompany.com/" rel="noopener">아비컴퍼니</a></div></footer>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('[data-column-cta]');if(!a)return;if(typeof window.gtag==='function')window.gtag('event','column_cta_click',{cta_type:a.dataset.columnCta,cta_position:a.dataset.position||'',article_slug:${JSON.stringify(c.slug)}});});</script>
 </body></html>`;
 }
 

@@ -60,6 +60,18 @@
     { "slug": "bamboo-salt-for-children", "category": "소금·나트륨 상식", "vol": 0, "ads": 10, "keyword": "어린이죽염", "angle": "어린이는 성인보다 나트륨 기준이 낮다는 점과 음식 전체 간을 먼저 봐야 한다는 원칙을 설명한다" },
     { "slug": "bamboo-salt-for-seniors", "category": "소금·나트륨 상식", "vol": 0, "ads": 10, "keyword": "노인죽염", "angle": "고령자의 식사에서 소금 종류보다 전체 나트륨과 의료진의 제한 안내가 우선임을 설명하고 효능은 주장하지 않는다" },
     { "slug": "bamboo-salt-product-label-checklist", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염고르는법", "angle": "제품명 광고보다 식품유형·원재료·원산지·제조원·내용량·나트륨 표시를 순서대로 확인하는 구매 체크리스트" },
-    { "slug": "bamboo-salt-unit-price-guide", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염비교", "angle": "브랜드 우열이 아니라 100g당 가격, 형태, 굽는 횟수 표기, 사용 목적을 같은 조건으로 비교하는 방법" }
+    { "slug": "bamboo-salt-unit-price-guide", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염비교", "angle": "브랜드 우열이 아니라 100g당 가격, 형태, 굽는 횟수 표기, 사용 목적을 같은 조건으로 비교하는 방법" },
+    { "slug": "bamboo-salt-gift-set-guide", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염선물세트", "angle": "부모님·명절 선물용 죽염을 고를 때 형태, 내용량, 표시사항, 포장을 확인하는 구매 체크리스트" },
+    { "slug": "purple-bamboo-salt-price-guide", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "자죽염가격", "angle": "자죽염 가격을 100g 단가와 형태, 내용량, 배송 조건까지 같은 기준으로 비교하는 방법" },
+    { "slug": "nine-times-bamboo-salt-price", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "9회죽염가격", "angle": "9회 죽염 구매 전 제품 표시와 100g당 가격을 확인하고 과장 광고를 구분하는 법" },
+    { "slug": "bamboo-salt-powder-or-crystal", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염분말고체", "angle": "분말형과 고체형의 사용 편의, 보관, 용도를 비교해 자신에게 맞는 형태를 고르는 법" },
+    { "slug": "bamboo-salt-small-size", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염소용량", "angle": "처음 구매할 때 소용량으로 형태와 사용성을 확인하고 단가까지 비교하는 기준" },
+    { "slug": "bamboo-salt-return-gift", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염답례품", "angle": "답례품용 죽염을 고를 때 예산, 표시사항, 포장, 받는 분의 식생활을 확인하는 기준" },
+    { "slug": "bamboo-salt-origin-label", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염원산지", "angle": "원재료명과 원산지, 제조원, 식품유형을 제품 라벨에서 정확히 확인하는 순서" },
+    { "slug": "bamboo-salt-expiration-storage", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염유통기한", "angle": "표시된 소비기한과 개봉 후 습기 관리, 덜어 쓰기, 용기 보관법을 설명한다" },
+    { "slug": "bamboo-salt-for-fish-grilling", "category": "죽염 활용법", "vol": 0, "ads": 10, "keyword": "죽염생선구이", "angle": "생선구이 밑간에서 죽염을 과하게 쓰지 않고 계량해 간을 맞추는 조리법" },
+    { "slug": "bamboo-salt-for-meat-grilling", "category": "죽염 활용법", "vol": 0, "ads": 10, "keyword": "죽염고기구이", "angle": "고기 굽기 전후 죽염을 사용하는 차이와 1인분 기준 소량 계량 팁" },
+    { "slug": "bamboo-salt-for-salad", "category": "죽염 활용법", "vol": 0, "ads": 10, "keyword": "죽염샐러드", "angle": "샐러드 드레싱에서 산미와 향을 활용해 소금 사용량을 조절하는 방법" },
+    { "slug": "bamboo-salt-moisture-clumping", "category": "보관·고르는 법", "vol": 0, "ads": 10, "keyword": "죽염굳음", "angle": "죽염이 습기로 굳는 이유와 안전하게 덜어 쓰고 건조하게 보관하는 방법" }
   ]
 }
